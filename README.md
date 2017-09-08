@@ -13,14 +13,13 @@ var express = require('express'),
     httpLogger = require('nfd-httpLogger');
 
 var app = express();
-
-// parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
 /*
+ * 依赖于bady-parser
  * 返回一个记录请求日志的中间件
  * 默认记录所有请求地址的请求日志。
- * 你也可以传入一个匹配特定请求地址的正则表达式作为参数
+ * 你也可以传入一个匹配特定请求地址的正则表达式作为参数,如：
  * app.use(httpLogger(/\.htm$/)); // 只记录请求地址以.htm结尾的请求日志
  */
 app.use(httpLogger());

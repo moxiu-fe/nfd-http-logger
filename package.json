@@ -4,14 +4,14 @@
   "description": "记录http日志",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./example/server.js"
   },
   "keywords": [
     "http日志"
   ],
   "author": "moxiu-fe",
   "license": "ISC",
-  "repository": "https://github.com/moxiu-fe",
+  "repository": "https://github.com/moxiu-fe/nfd-http-logger",
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.15.4"

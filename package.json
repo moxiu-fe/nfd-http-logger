@@ -1,6 +1,6 @@
 {
   "name": "nfd-http-logger",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "记录http日志",
   "main": "index.js",
   "scripts": {

@@ -24,7 +24,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
  */
 app.use(httpLogger());
 ```
-此时，请求日志将会输出至控制台,将会记录一下http信息：remoteAddress、methos、url、status、protocol、httpVersion、Response Headers、Request Headers、Query String Parameter、Form Data，（不会记录Content-Type: multipart/form-data的请求body）
+此时，请求日志将会输出至控制台,将会记录一下http信息：remoteAddress、methos、url、status、protocol、httpVersion、Response Headers、Response Body、
+Request Headers、 Query String Parameter、Form Data，（不会记录Content-Type: multipart/form-data的请求body）
 ```
 ::1 POST /url?test=1 200 OK http HTTP/1.1
     Response Headers

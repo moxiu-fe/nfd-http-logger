@@ -1,20 +1,17 @@
-var httpLogger = function (regExp) {
+var httpLogger = function(regExp) {
     if (regExp && regExp instanceof RegExp) {
-        return function (req, res, next) {
+        return function(req, res, next) {
             if (regExp.test(req.path)) {
-                req.recordHttpLog = false;  // 标志这个请求日志还没有保存
+                req.recordHttpLog = false; // 标志这个请求日志还没有保存
                 res._sendData_ = res.send;
-                res.send = function (data) {
+                res.send = function(data) {
                     if (!req.recordHttpLog) {
                         req.recordHttpLog = true;
-                        // const time = process.hrtime();
                         res.emit('recordHttpLog', data);
-                        // const diff = process.hrtime(time);
-                        // console.log('记录日志消耗的时间：', diff[0] * 1000 + diff[1] / 1000000 + 'ms')
                     }
                     res._sendData_(data);
                 }
-                res.once('recordHttpLog', function (data) {
+                res.once('recordHttpLog', function(data) {
                     var combined_tokens = assemble_tokens(req, res, data);
                     var line = format(combined_tokens);
                     console.log(line);
@@ -23,20 +20,17 @@ var httpLogger = function (regExp) {
             next();
         }
     } else {
-        return function (req, res, next) {
-            req.recordHttpLog = false;  // 标志这个请求日志还没有保存
+        return function(req, res, next) {
+            req.recordHttpLog = false; // 标志这个请求日志还没有保存
             res._sendData_ = res.send;
-            res.send = function (data) {
+            res.send = function(data) {
                 if (!req.recordHttpLog) {
                     req.recordHttpLog = true;
-                    // const time = process.hrtime();
                     res.emit('recordHttpLog', data);
-                    // const diff = process.hrtime(time);
-                    // console.log('记录日志消耗的时间：', diff[0] * 1000 + diff[1] / 1000000 + 'ms')
                 }
                 res._sendData_(data);
             }
-            res.once('recordHttpLog', function (data) {
+            res.once('recordHttpLog', function(data) {
                 var combined_tokens = assemble_tokens(req, res, data);
                 var line = format(combined_tokens);
                 console.log(line);
@@ -62,7 +56,7 @@ var httpLogger = function (regExp) {
  */
 function assemble_tokens(req, res, data) {
     let resBody = typeof data === 'object' ? JSON.stringify(data) : data;
-    resBody.length > 10000 ? resBody = resBody.substring(0, 10000) + '......' : resBody = resBody;  //只记录前10000个长度
+    resBody.length > 10000 ? resBody = resBody.substring(0, 10000) + '......' : resBody = resBody; //只记录前10000个长度
     let tokens = {
         general: getGeneralStr(req, res),
         resHeaders: objectToStr(res._headers, '\n     Response Headers'),
@@ -80,7 +74,7 @@ function assemble_tokens(req, res, data) {
         if (contenType === 'application/x-www-form-urlencoded') {
             tokens.body = objectToStr(req.body, '\n     Form Data')
         } else if (contenType === 'application/json') {
-            tokens.body = objectToStr(req.body, '\n     Request Payload')
+            tokens.body = '\n     Request Payload\n       ' + JSON.stringify(req.body || {})
         } else if (/text/i.test(contenType)) {
             tokens.body = '\n      Request Payload' + '       ' + req.body;
         }
@@ -95,13 +89,13 @@ function getGeneralStr(req, res) {
         url = req.originalUrl || req.url,
         status = res.statusCode,
         remoteAddress = req.headers['x-forwarded-for'] ||
-            req.ip ||
-            req._remoteAddress ||
-            (req.socket &&
-                (req.socket.remoteAddress ||
-                    (req.socket.socket && req.socket.socket.remoteAddress)
-                )
-            ),
+        req.ip ||
+        req._remoteAddress ||
+        (req.socket &&
+            (req.socket.remoteAddress ||
+                (req.socket.socket && req.socket.socket.remoteAddress)
+            )
+        ),
         protocol = req.protocol,
         httpVersion = 'HTTP/' + req.httpVersion;
 
@@ -111,7 +105,7 @@ function getGeneralStr(req, res) {
 function objectToStr(obj, title) {
     var arr = Object.keys(obj),
         str = title;
-    arr.forEach(function (item, index) {
+    arr.forEach(function(item, index) {
         str += '\n       ' + item + ':' + obj[item];
     })
 
@@ -122,7 +116,7 @@ function format(tokens) {
     var arr = Object.keys(tokens),
         str = '';
 
-    arr.forEach(function (item, index) {
+    arr.forEach(function(item, index) {
         str += tokens[item]
     })
 
